@@ -10,10 +10,7 @@ class PDB(object):
 			self.moleculars[name] = Molecular(self, name)
 		return self.moleculars[name]
 	def get_all_mol_name(self):
-		moleculars_keys = []
-		for key in self.moleculars.keys():
-			moleculars_keys.append(key)
-		return moleculars_keys
+		return [key for key in self.moleculars.keys()]
 
 class Molecular(object):
 	def __init__(self, PDB, name):
@@ -25,15 +22,9 @@ class Molecular(object):
 			self.atoms[atom_type] = Atom(self, atom_type)
 		return self.atoms[atom_type]
 	def get_XYZ(self):
-		atmos_values = []
-		for atom in self.atoms.values():
-			atmos_values.append(atom.get_XYZ())
-		return atmos_values
+		return [atom for atom in self.atmos.values()]
 	def get_all_atom_name(self):
-		atmos_keys = []
-		for key in self.atoms.keys():
-			atmos_keys.append(key)
-		return atmos_keys
+		return [key for key in self.atmos.keys()]
 
 class Atom(object):
 	def __init__(self, molecular, atom_type):
@@ -117,14 +108,14 @@ def findmol(PDBClass, res = None, chain = None, index = None):
 
 def findatom(PDBClass, res = None, chain = None, res_index = None, atom = None, atom_index = None):
 	if res != None and res_index != None and chain != None and atom == None:
-		name = res + '_' + str(chain) + '_' + str(res_index)
+		name = "_".join([res, str(chain), str(res_index)])
 		return PDBClass.get_molecular(name).get_all_atom_name()
 	if res != None and res_index != None and atom != None and chain != None:
-		name = res + '_' + str(chain) + '_' + str(res_index)
+		name = "_".join([res, str(chain), str(res_index)])
 		for item in PDBClass.get_molecular(name).get_all_atom_name():
 			atom_type = item.split('_')[0]
 			if atom == atom_type:
-				return (name,item)
+				return name, item
 	atom_list = []
 	list1 = PDBClass.get_all_mol_name()
 	if atom_index != None:
@@ -134,13 +125,13 @@ def findatom(PDBClass, res = None, chain = None, res_index = None, atom = None, 
 				atom_type = item.split('_')[0]
 				atom_num = int(item.split('_')[1])
 				if atom_index == atom_num:
-					return (mol,item)
+					return mol, item
 	print ("Error: atom can not be found under given parameters")
 
 def calculate_mol(f, res1, chain1, index1, res2, chain2, index2):
 	aminolist = ['ALA','GLY','VAL','ILE','LEU','MET','SER','THR','PRO','CYS','PHE','TYR','HIS','TRP','GLU','ASP','GLN','ASN','ARG','LYS']
-	name1 = res1 + '_' + chain1 + '_' + str(index1)
-	name2 = res2 + '_' + chain2 + '_' + str(index2)
+	name1 = "_".join([res1, chain1, str(index1)])
+	name2 = "_".join([res2, chain2, str(index2)])
 	result = []
 	Allscore = 0.0
 	if chain1 == chain2 and abs(index1 - index2) < 5 or (res1 not in aminolist or res2 not in aminolist):	
