@@ -10,10 +10,10 @@ class PDB(object):
 			self.moleculars[name] = Molecular(self, name)
 		return self.moleculars[name]
 	def get_all_mol_name(self):
-		List = []
+		moleculars_keys = []
 		for key in self.moleculars.keys():
-			List.append(key)
-		return List
+			moleculars_keys.append(key)
+		return moleculars_keys
 
 class Molecular(object):
 	def __init__(self, PDB, name):
@@ -25,15 +25,15 @@ class Molecular(object):
 			self.atoms[atom_type] = Atom(self, atom_type)
 		return self.atoms[atom_type]
 	def get_XYZ(self):
-		List = []
+		atmos_values = []
 		for atom in self.atoms.values():
-			List.append(atom.get_XYZ())
-		return List
+			atmos_values.append(atom.get_XYZ())
+		return atmos_values
 	def get_all_atom_name(self):
-		List = []
+		atmos_keys = []
 		for key in self.atoms.keys():
-			List.append(key)
-		return List
+			atmos_keys.append(key)
+		return atmos_keys
 
 class Atom(object):
 	def __init__(self, molecular, atom_type):
